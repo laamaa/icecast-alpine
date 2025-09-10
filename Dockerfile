@@ -1,14 +1,13 @@
-FROM registry.access.redhat.com/ubi10/ubi:latest
+FROM alpine:latest
 
-# Install EPEL and required packages
-RUN dnf install -y epel-release && \
-    dnf install -y \
+# Install icecast and required packages
+RUN apk add --no-cache \
     icecast \
-    && dnf clean all
+    su-exec
 
 # Create icecast user and group
-RUN groupadd -g 1000 icecast && \
-    useradd -u 1000 -g icecast -s /bin/false -M icecast
+RUN addgroup -g 1000 -S icecast && \
+    adduser -u 1000 -S -G icecast -s /bin/false -H icecast
 
 # Create necessary directories
 RUN mkdir -p /var/log/icecast2 /var/lib/icecast2 /etc/icecast2 && \
@@ -20,11 +19,5 @@ COPY --chown=icecast:icecast config/icecast.xml /etc/icecast2/icecast.xml
 # Expose the default Icecast port
 EXPOSE 8000
 
-# Switch to icecast user
-USER icecast
-
-# Set the working directory
-WORKDIR /etc/icecast2
-
-# Start icecast server
-CMD ["icecast2", "-c", "/etc/icecast2/icecast.xml"]
+# Start icecast server using su-exec to drop privileges
+CMD ["su-exec", "icecast:icecast", "icecast2", "-c", "/etc/icecast2/icecast.xml"]
