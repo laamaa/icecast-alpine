@@ -12,7 +12,6 @@ COPY config/icecast.xml /etc/icecast.xml
 EXPOSE 8000
 
 # Run as non-root user (optional, for better security)
-RUN adduser -D -H icecast
 USER icecast
 
 # Start icecast with config
