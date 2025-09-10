@@ -1,23 +1,19 @@
+# Use Alpine as base
 FROM alpine:latest
 
-# Install icecast and required packages
-RUN apk add --no-cache \
-    icecast \
-    su-exec
+# Install icecast and clean up
+RUN apk add --no-cache icecast
 
-# Create icecast user and group
-RUN addgroup -g 1000 -S icecast && \
-    adduser -u 1000 -S -G icecast -s /bin/false -H icecast
+# Copy a default config or mount one at runtime
+# By default, Icecast config is at /etc/icecast/icecast.xml
+COPY config/icecast.xml /etc/icecast.xml
 
-# Create necessary directories
-RUN mkdir -p /var/log/icecast2 /var/lib/icecast2 /etc/icecast2 && \
-    chown -R icecast:icecast /var/log/icecast2 /var/lib/icecast2 /etc/icecast2
-
-# Copy default configuration if not provided via volume
-COPY --chown=icecast:icecast config/icecast.xml /etc/icecast2/icecast.xml
-
-# Expose the default Icecast port
+# Expose Icecast web/streaming port
 EXPOSE 8000
 
-# Start icecast server using su-exec to drop privileges
-CMD ["su-exec", "icecast:icecast", "icecast2", "-c", "/etc/icecast2/icecast.xml"]
+# Run as non-root user (optional, for better security)
+RUN adduser -D -H icecast
+USER icecast
+
+# Start icecast with config
+CMD ["icecast", "-c", "/etc/icecast/icecast.xml"]
