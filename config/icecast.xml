@@ -1,0 +1,72 @@
+<icecast>
+    <!-- Location and admin contact details -->
+    <location>Earth</location>
+    <admin>icemaster@localhost</admin>
+
+    <!-- Server limits -->
+    <limits>
+        <clients>100</clients>
+        <sources>2</sources>
+        <threadpool>5</threadpool>
+        <queue-size>524288</queue-size>
+        <client-timeout>30</client-timeout>
+        <header-timeout>15</header-timeout>
+        <source-timeout>10</source-timeout>
+        <burst-on-connect>1</burst-on-connect>
+        <burst-size>65535</burst-size>
+    </limits>
+
+    <!-- Authentication -->
+    <authentication>
+        <source-password>hackme</source-password>
+        <relay-password>hackme</relay-password>
+        <admin-user>admin</admin-user>
+        <admin-password>hackme</admin-password>
+    </authentication>
+
+    <!-- Hostname and port configuration -->
+    <hostname>localhost</hostname>
+    <listen-socket>
+        <port>8000</port>
+        <!-- <bind-address>127.0.0.1</bind-address> -->
+        <!-- <shoutcast-mount>/stream</shoutcast-mount> -->
+    </listen-socket>
+
+    <!-- Relay settings -->
+    <!--
+    <master-server>127.0.0.1</master-server>
+    <master-server-port>8001</master-server-port>
+    <master-update-interval>120</master-update-interval>
+    <master-password>hackme</master-password>
+    -->
+
+    <!-- File locations -->
+    <fileserve>1</fileserve>
+    <paths>
+        <basedir>/usr/share/icecast2</basedir>
+        <logdir>/var/log/icecast2</logdir>
+        <webroot>/usr/share/icecast2/web</webroot>
+        <adminroot>/usr/share/icecast2/admin</adminroot>
+        <alias source="/" dest="/status.xsl"/>
+    </paths>
+
+    <!-- Logging configuration -->
+    <logging>
+        <accesslog>access.log</accesslog>
+        <errorlog>error.log</errorlog>
+        <loglevel>3</loglevel> <!-- 4 Debug, 3 Info, 2 Warn, 1 Error -->
+        <logsize>10000</logsize> <!-- Max logfile size in KB -->
+        <logarchive>1</logarchive>
+    </logging>
+
+    <!-- Security settings -->
+    <security>
+        <chroot>0</chroot>
+        <!--
+        <changeowner>
+            <user>icecast</user>
+            <group>icecast</group>
+        </changeowner>
+        -->
+    </security>
+</icecast>
